@@ -1,10 +1,13 @@
-package com.example.Student;
+package com.example.Student.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.Student.Entity.Qualification;
+import com.example.Student.Repository.Qualificationrepository;
 
 @Service
 public class QualificationService {

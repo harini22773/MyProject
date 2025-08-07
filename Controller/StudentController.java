@@ -1,4 +1,4 @@
-package com.example.Student;
+package com.example.Student.Controller;
 
 
 import java.util.List;
@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Student.Entity.Student;
+import com.example.Student.Service.StudentService;
+import com.example.Student.dto.StudentDTO;
+import com.example.Student.dto.StudentDetailDTO;
 import com.example.Student.response.responsegenerator;
 
 import jakarta.validation.Valid;

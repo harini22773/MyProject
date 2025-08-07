@@ -1,4 +1,4 @@
-package com.example.Student;
+package com.example.Student.Service;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.example.Student.Entity.User;
+import com.example.Student.Repository.UserRepository;
+import com.example.Student.dto.UserDTO;
 
 
 @Service

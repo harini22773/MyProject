@@ -1,6 +1,9 @@
-package com.example.Student;
+package com.example.Student.dto;
 
 import java.util.List;
+
+import com.example.Student.Entity.Address;
+import com.example.Student.Entity.Qualification;
 
 import lombok.Data;
 

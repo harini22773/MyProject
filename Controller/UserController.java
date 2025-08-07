@@ -1,5 +1,5 @@
 
-package com.example.Student;
+package com.example.Student.Controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Student.Entity.User;
+import com.example.Student.Service.UserService;
 import com.example.Student.Util.JWTUtil;
+import com.example.Student.dto.UserDTO;
 import com.example.Student.response.responsegenerator;
 
 

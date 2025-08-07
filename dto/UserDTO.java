@@ -1,4 +1,4 @@
-package com.example.Student;
+package com.example.Student.dto;
 
 
 public class UserDTO {
