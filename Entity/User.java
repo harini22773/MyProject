@@ -22,8 +22,28 @@ public class User {
 
 	@Column(name = "user_password")
 	private String userPassword;
+	
+	
+	@Column(name = "profile_image_uuid")
+	private String profileImageUuid;
+	@Column(name = "profile_image_path")
+	private String profileImagePath;
 
+	public String getProfileImagePath() {
+		return profileImagePath;
+	}
 
+	public void setProfileImagePath(String profileImagePath) {
+		this.profileImagePath = profileImagePath;
+	}
+
+	public String getProfileImageUuid() {
+	    return profileImageUuid;
+	}
+
+	public void setProfileImageUuid(String profileImageUuid) {
+	    this.profileImageUuid = profileImageUuid;
+	}
 	
 
 

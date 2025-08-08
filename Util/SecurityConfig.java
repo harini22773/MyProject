@@ -26,7 +26,7 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 			.authorizeHttpRequests()
-				.requestMatchers("/user/login").permitAll()
+				.requestMatchers("/user/login","/api/file/upload","/api/file/image/{filename}","user/byProfile/{uuid}/image").permitAll()
 				.anyRequest().authenticated()
 			.and()
 			.exceptionHandling()

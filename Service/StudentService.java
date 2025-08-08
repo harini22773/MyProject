@@ -1,5 +1,7 @@
 package com.example.Student.Service;
 
+import java.io.FileOutputStream;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +14,11 @@ import com.example.Student.Repository.Qualificationrepository;
 import com.example.Student.Repository.Studentrepository;
 import com.example.Student.dto.StudentDTO;
 import com.example.Student.dto.StudentDetailDTO;
-
+import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 @Service
 public class StudentService {
 
@@ -89,5 +95,48 @@ public class StudentService {
 		return studentrepository.getFullStudentDTO(id);
 	}
 
+	public List<Student> getAllStudents() {
+        return studentrepository.findAll();
+    }
+	public List<Student> getAllStudentsAndGeneratePdf() {
+        List<Student> students = studentrepository.findAll();
+
+        if (!students.isEmpty()) {
+            generatePdf(students, "C:\\fileupload\\StudentsData.pdf");
+        }
+
+        return students; 
+    }
+   private void generatePdf(List<Student> students, String filePath) {
+        try {
+            Document document = new Document(PageSize.A4);
+            PdfWriter.getInstance(document, new FileOutputStream(filePath));
+            document.open();
+
+            Field[] fields = Student.class.getDeclaredFields();
+            PdfPTable table = new PdfPTable(fields.length);
+
+            for (Field field : fields) {
+                field.setAccessible(true);
+                table.addCell(new PdfPCell());
+            }
+
+            for (Student student : students) {
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    Object value = field.get(student);
+                    table.addCell(value != null ? value.toString() : "");
+                }
+            }
+
+            document.add(table);
+            document.close();
+            System.out.println("PDF generated at: " + filePath);
+
+        } catch (Exception e) {
+            throw new RuntimeException("PDF generation failed", e);
+        }
+    }
+}
 	
-	}
+	

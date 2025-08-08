@@ -1,9 +1,13 @@
 package com.example.Student.Controller;
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,13 +18,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.Student.Entity.Student;
 import com.example.Student.Service.StudentService;
 import com.example.Student.dto.StudentDTO;
 import com.example.Student.dto.StudentDetailDTO;
 import com.example.Student.response.responsegenerator;
-
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
  
@@ -31,7 +34,9 @@ public class StudentController {
 	
 	@Autowired
 	private StudentService studentService;
-	
+	public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+	}
 
 	@GetMapping("/getAll")
 	public ResponseEntity<?> getAllStudent() {
@@ -114,8 +119,48 @@ public class StudentController {
 			} catch (Exception e) {
 				return responsegenerator.errorResponse(e.getMessage());
 	 
-				
+			}
 }
+			@GetMapping("/export")
+			public void exportToExcel(HttpServletResponse response) throws IOException {
+			    response.setContentType("application/octet-stream");
+
+			    String headerKey = "Content-Disposition";
+			    String headerValue = "attachment; filename=students.xlsx";
+			    response.setHeader(headerKey, headerValue);
+
+			    List<Student> studentList = studentService.getAllStudents();
+
+			    XSSFWorkbook workbook = new XSSFWorkbook();
+			    XSSFSheet sheet = workbook.createSheet("Students");
+
+			    XSSFRow header = sheet.createRow(0);
+			    header.createCell(0).setCellValue("Student ID");
+			    header.createCell(1).setCellValue("DOB");
+			    header.createCell(2).setCellValue("Course");
+			    header.createCell(3).setCellValue("Gender");
+			    header.createCell(4).setCellValue("Phone");
+
+			    int rowCount = 1;
+			    for (Student student : studentList) {
+			        XSSFRow row = sheet.createRow(rowCount++);
+			        row.createCell(0).setCellValue(student.getStudentId());
+			        row.createCell(1).setCellValue(student.getDob());
+			        row.createCell(2).setCellValue(student.getCourse());
+			        row.createCell(3).setCellValue(student.getGender());
+			        row.createCell(4).setCellValue(student.getPhNo());
+			    }
+
+			    workbook.write(response.getOutputStream());
+			    workbook.close();
+			
 
 }
-}
+			
+			@GetMapping("/pdf")
+		    public List<Student> getAllStudents1() {
+		        return studentService.getAllStudentsAndGeneratePdf();
+		    }
+		}
+
+

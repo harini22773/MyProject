@@ -1,6 +1,8 @@
 
 package com.example.Student.Controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +18,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Student.Entity.User;
 import com.example.Student.Service.UserService;
@@ -145,5 +148,33 @@ public ResponseEntity<?> loginDetails(@RequestBody UserDTO request) {
 			
 			return responsegenerator.errorResponse(e.getMessage());
 		}
- }   
  }
+		// Upload profile image for existing user
+	    @PostMapping("/{userId}/uploadProfile")
+	    public ResponseEntity<String> uploadProfileImage(
+	            @PathVariable String userId,
+	            @RequestParam("file") MultipartFile file) throws IOException {
+
+	        String uuid = service.uploadProfileImage(userId, file);
+	        return ResponseEntity.ok("Profile image uploaded successfully. UUID: " + uuid);
+	    }
+
+	    @GetMapping("/byProfile/{uuid}/image")
+	    public ResponseEntity<byte[]> getProfileImageByUuid(@PathVariable String uuid) throws IOException {
+	        Optional<User> userOpt = service.getUserByProfileUuid(uuid);
+	        if (!userOpt.isPresent() || userOpt.get().getProfileImagePath() == null) {
+	            return ResponseEntity.notFound().build();
+	        }
+
+	        File imgFile = new File(userOpt.get().getProfileImagePath());
+	        if (!imgFile.exists()) {
+	            return ResponseEntity.notFound().build();
+	        }
+
+	        byte[] imageBytes = java.nio.file.Files.readAllBytes(imgFile.toPath());
+
+	        return ResponseEntity.ok()
+	                .header("Content-Type", "image/jpeg") // or detect dynamically
+	                .body(imageBytes);
+	    }
+}

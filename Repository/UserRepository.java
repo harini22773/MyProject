@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User,Integer>{
 	List<User> findByStudentId(int studentId);
 Optional<User> findByUserName(String userName);
 User findByUserNameAndUserPassword(String userName, String password);
-
-
+Optional<User> findByProfileImageUuid(String profileImageUuid);
+Optional<User> findByUserId(String userId);
 }
